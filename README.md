@@ -27,6 +27,13 @@ The same as in HW1: a **JDK 17 or newer** (check it with `java -version`) and an
 VS Code with the **Extension Pack for Java** (`vscjava.vscode-java-pack`), or IntelliJ IDEA. Gradle
 and Tai-e are downloaded automatically the first time you build the project.
 
+### If your setup doesn't work: Docker
+
+If you can't get the JDK working, or the downloads never finish, use the course's Docker image: it has
+everything already installed and works without internet. Follow
+[these instructions](https://github.com/gtiit-cs-seminar/df-env/blob/main/STUDENTS.md). If you are *not*
+using Docker, ignore VS Code's "Reopen in Container" suggestion.
+
 ## 3. The homework
 
 Complete the methods that throw `UnsupportedOperationException`, all in
