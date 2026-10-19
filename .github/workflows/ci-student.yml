@@ -1,0 +1,21 @@
+name: Student CI
+
+# Runs the public test suite on every push, so students see the results of their
+# tests in their own repo. Synced to the student repo through sync-manifest.txt.
+
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Run public test suite
+        run: ./gradlew test

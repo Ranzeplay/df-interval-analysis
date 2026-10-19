@@ -1,0 +1,5 @@
+# Scripts run inside the Linux container: if Git on Windows converts them to
+# CRLF, `./gradlew` fails with "/usr/bin/env: 'sh\r'".
+gradlew   text eol=lf
+*.sh      text eol=lf
+*.bat     text eol=crlf

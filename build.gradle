@@ -1,0 +1,53 @@
+plugins {
+    id 'java'
+}
+
+group = 'seminar'
+version = '1.0-SNAPSHOT'
+
+repositories {
+    // In mainland China, this mirror is usually much faster than Maven Central:
+    // maven { url = 'https://maven.aliyun.com/repository/public' }
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'net.pascal-lab:tai-e:0.5.4'
+
+    testImplementation platform('org.junit:junit-bom:5.13.4')
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+configurations.configureEach {
+    // heros (a Soot library Tai-e depends on) asks for guava:[24.1.1,). Pinning it keeps
+    // builds reproducible and stops Gradle from re-querying Maven Central every 24 h.
+    resolutionStrategy.force 'com.google.guava:guava:33.3.0-jre'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+    // Any JDK >= 17 works (Tai-e needs 17+). Debug info (on by default) keeps the
+    // source variable names that the analyses report.
+    options.release = 17
+}
+
+// Tai-e analyzes the compiled target classes (src/main/java), wherever they were compiled to;
+// it writes its logs to build/tai-e.
+def taieOutputDir = layout.buildDirectory.dir('tai-e').get().asFile.path
+
+test {
+    useJUnitPlatform()
+    systemProperty 'taie.outputDir', taieOutputDir
+}
+
+
+tasks.register('intervalAnalysis', JavaExec) {
+    group = 'verification'
+    description = 'Runs the interval analysis on a target class: -PtargetClass=<class> [-Pmode=NAIVE|WIDENING|NARROWING]'
+    dependsOn classes
+    classpath = sourceSets.main.runtimeClasspath
+    mainClass = 'seminar.dataflow.IntervalLauncher'
+    systemProperty 'taie.outputDir', taieOutputDir
+    args(project.findProperty('targetClass') ?: '', project.findProperty('mode') ?: 'WIDENING')
+}

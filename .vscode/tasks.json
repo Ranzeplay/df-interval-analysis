@@ -1,0 +1,50 @@
+// Tasks to run from VS Code (Terminal > Run Task...).
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Tests (gradlew test)",
+      "type": "shell",
+      "command": "./gradlew test",
+      "windows": {
+        "command": ".\\gradlew.bat test"
+      },
+      "group": {
+        "kind": "test",
+        "isDefault": true
+      },
+      "problemMatcher": []
+    },
+    {
+      "label": "Interval analysis on a class",
+      "type": "shell",
+      "command": "./gradlew intervalAnalysis -PtargetClass=${input:intervalTarget} -Pmode=${input:intervalMode}",
+      "windows": {
+        "command": ".\\gradlew.bat intervalAnalysis -PtargetClass=${input:intervalTarget} -Pmode=${input:intervalMode}"
+      },
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "intervalTarget",
+      "type": "pickString",
+      "description": "Class to analyze",
+      "options": [
+        "seminar.dataflow.intervaltargets.IntervalAnalysis1",
+        "seminar.dataflow.intervaltargets.IntervalAnalysis2",
+        "seminar.dataflow.intervaltargets.IntervalAnalysis3"
+      ]
+    },
+    {
+      "id": "intervalMode",
+      "type": "pickString",
+      "description": "Analysis variant",
+      "options": [
+        "WIDENING",
+        "NARROWING",
+        "NAIVE"
+      ]
+    }
+  ]
+}
