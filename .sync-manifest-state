@@ -7,7 +7,8 @@ src/main/java/seminar/dataflow/util/taie/TaieRunner.java
 src/main/java/seminar/dataflow/util/visitor/AbstractValueVisitor.java
 src/main/java/seminar/dataflow/util/visitor/ValueVisitor.java
 .github/workflows/ci-student.yml
-STUDENTS.md
+README.md
+assignment/DF-HW1-bonus-Assignment.pdf
 .vscode/tasks.json
 .gitattributes
 src/main/java/seminar/dataflow/intervalanalysis/IntervalAbstractState.java
