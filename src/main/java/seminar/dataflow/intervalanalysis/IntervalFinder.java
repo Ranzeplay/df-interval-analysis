@@ -1,5 +1,6 @@
 package seminar.dataflow.intervalanalysis;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class IntervalFinder {
@@ -13,8 +14,13 @@ public class IntervalFinder {
      * @return array with [lowerBound, upperBound] of best fitting interval, or null if no valid interval exists
      */
     public static int[] findBestFittingInterval(int lower, int upper, int[] B) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        var low = Arrays.stream(B).filter(n -> n <= lower).max();
+        var high = Arrays.stream(B).filter(n -> n >= upper).min();
+        if(low.isEmpty() || high.isEmpty()) {
+            return null;
+        }
+
+        return new int[] {low.getAsInt(), high.getAsInt()};
     }
 
     /**
