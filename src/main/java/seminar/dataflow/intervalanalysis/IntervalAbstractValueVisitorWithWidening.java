@@ -27,37 +27,27 @@ public class IntervalAbstractValueVisitorWithWidening extends IntervalAbstractVa
 
     @Override
     protected void visitDivExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.widenDiv(rightOperand, breaks);
     }
 
     @Override
     protected void visitMulExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.widenMul(rightOperand, breaks);
     }
 
     @Override
     protected void visitSubExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.widenSubtract(rightOperand, breaks);
     }
 
     @Override
     protected void visitAddExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.widenAdd(rightOperand, breaks);
     }
 
     @Override
     protected void visitIntegerConstant(int value) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = IntervalAbstractValue.singleton(value).widen(breaks);
     }
 
     @Override

@@ -41,7 +41,6 @@ public class IntervalFinder {
     }
 
     public static int findBestSingleton(int value, List<Integer> B) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        return B.stream().sorted((a, b) -> Math.abs(value - a) - Math.abs(value - b)).findFirst().get();
     }
 }

@@ -24,44 +24,32 @@ public class IntervalAbstractValueVisitorNaive extends IntervalAbstractValueVisi
 
     @Override
     protected void visitDivExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.div(rightOperand);
     }
 
     @Override
     protected void visitMulExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.mul(rightOperand);
     }
 
     @Override
     protected void visitSubExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.subtract(rightOperand);
     }
 
     @Override
     protected void visitAddExpression(IntervalAbstractValue leftOperand, IntervalAbstractValue rightOperand) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = leftOperand.add(rightOperand);
     }
 
     @Override
     protected void visitIntegerConstant(int value) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        resolvedValue = IntervalAbstractValue.singleton(value);
     }
 
     @Override
     protected void visitParameter(Var parameter) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
-        // resolvedValue = ...;
+        visitLocal(parameter);
     }
 
     @Override

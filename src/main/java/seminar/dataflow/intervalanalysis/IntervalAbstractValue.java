@@ -1,6 +1,7 @@
 package seminar.dataflow.intervalanalysis;
 
 import java.util.ArrayList;
+import java.util.stream.IntStream;
 
 public class IntervalAbstractValue {
     public static final int NEG_INFINITY = Integer.MIN_VALUE;
@@ -54,49 +55,67 @@ public class IntervalAbstractValue {
 
     // region abstract operations
 
+    public IntervalAbstractValue widen(ArrayList<Integer> breaks) {
+        if (this.isTop() || this.isBottom()) return this;
+
+        var interval = IntervalFinder.findBestFittingInterval(this.lower, this.upper, breaks);
+        if(interval == null) return IntervalAbstractValue.bottom();
+
+        return new IntervalAbstractValue(interval[0], interval[1]);
+    }
+
     public IntervalAbstractValue add(IntervalAbstractValue other){
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (this.isBottom() || other.isBottom()) return bottom();
+        if (this.isTop() || other.isTop()) return top();
+
+        return new IntervalAbstractValue(this.lower + other.lower, this.upper + other.upper);
     }
 
     public IntervalAbstractValue widenAdd(IntervalAbstractValue other, ArrayList<Integer> breaks) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        return this.add(other).widen(breaks);
     }
 
     public IntervalAbstractValue mul(IntervalAbstractValue other){
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (this.isBottom() || other.isBottom()) return bottom();
+        if (this.isTop() || other.isTop()) return top();
+
+        var values = new int[] { this.lower * other.lower, this.lower * other.upper, this.upper * other.lower, this.upper * other.upper };
+        var stream = IntStream.of(values);
+
+        return new IntervalAbstractValue(stream.min().getAsInt(), stream.max().getAsInt());
     }
 
     public IntervalAbstractValue widenMul(IntervalAbstractValue other, ArrayList<Integer> breaks) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        return this.mul(other).widen(breaks);
     }
 
     public IntervalAbstractValue widenSubtract(IntervalAbstractValue other, ArrayList<Integer> breaks) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        return this.subtract(other).widen(breaks);
     }
 
     public IntervalAbstractValue subtract(IntervalAbstractValue other){
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (this.isBottom() || other.isBottom()) return bottom();
+        if (this.isTop() || other.isTop()) return top();
+
+        return new IntervalAbstractValue(this.lower - other.upper, this.upper - other.lower);
     }
 
-    public IntervalAbstractValue div(IntervalAbstractValue other){
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+    public IntervalAbstractValue div(IntervalAbstractValue other) {
+        if (this.isBottom() || other.isBottom()) return bottom();
+        if (this.isTop() || other.isTop()) return top();
+
+        return new IntervalAbstractValue(this.lower / other.upper, this.upper / other.lower);
     }
 
     public IntervalAbstractValue widenDiv(IntervalAbstractValue other, ArrayList<Integer> breaks) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        return this.div(other).widen(breaks);
     }
 
     public IntervalAbstractValue join(IntervalAbstractValue other) {
-        // TODO: IMPLEMENT
-        throw new UnsupportedOperationException();
+        if (this.isBottom() || other.isBottom()) return bottom();
+        if (this.isTop() || other.isTop()) return top();
+
+        return new IntervalAbstractValue(Math.min(this.lower, other.lower), Math.max(this.upper, other.upper));
     }
 
     public boolean isBottom() {
