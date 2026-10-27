@@ -109,10 +109,15 @@ public class IntervalAbstractValue {
         if (this.isTop() || other.isTop()) return top();
 
         if (other.lower <= 0 && other.upper >= 0) {
-            // Division by zero is possible, return top
-            return top();
+            // Division by zero is possible, return bottom
+            return bottom();
         }
 
+        
+        if (other.lower == NEG_INFINITY || other.upper == POS_INFINITY) {
+            // If the divisor interval is unbounded, return top
+            return top();
+        }
 
         return mul(new IntervalAbstractValue(1 / other.upper, 1 / other.lower));
     }
