@@ -20,7 +20,7 @@ public class IntervalAbstractState {
     // region operations
 
     public IntervalAbstractValue getIntervalForVariable(String variable) {
-        return variables.getOrDefault(variable, IntervalAbstractValue.top());
+        return variables.getOrDefault(variable, IntervalAbstractValue.bottom());
     }
 
     public IntervalAbstractState setIntervalForVariable(String variable, IntervalAbstractValue interval) {
