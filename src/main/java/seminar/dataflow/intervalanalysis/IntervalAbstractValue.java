@@ -67,7 +67,8 @@ public class IntervalAbstractValue {
     public IntervalAbstractValue add(IntervalAbstractValue other){
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
-
+        if (this.lower == NEG_INFINITY || other.lower == NEG_INFINITY) return new IntervalAbstractValue(NEG_INFINITY, this.upper + other.upper);
+        if (this.upper == POS_INFINITY || other.upper == POS_INFINITY) return new IntervalAbstractValue(this.lower + other.lower, POS_INFINITY);
         return new IntervalAbstractValue(this.lower + other.lower, this.upper + other.upper);
     }
 
@@ -101,10 +102,19 @@ public class IntervalAbstractValue {
     }
 
     public IntervalAbstractValue div(IntervalAbstractValue other) {
+
+        
+
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
 
-        return new IntervalAbstractValue(this.lower / other.upper, this.upper / other.lower);
+        if (other.lower <= 0 && other.upper >= 0) {
+            // Division by zero is possible, return top
+            return top();
+        }
+
+
+        return mul(new IntervalAbstractValue(1 / other.upper, 1 / other.lower));
     }
 
     public IntervalAbstractValue widenDiv(IntervalAbstractValue other, ArrayList<Integer> breaks) {
