@@ -2,7 +2,6 @@ package seminar.dataflow.intervalanalysis;
 
 import java.util.ArrayList;
 import java.util.stream.IntStream;
-
 public class IntervalAbstractValue {
     public static final int NEG_INFINITY = Integer.MIN_VALUE;
     public static final int POS_INFINITY = Integer.MAX_VALUE;
@@ -126,9 +125,14 @@ public class IntervalAbstractValue {
 
     public IntervalAbstractValue div(IntervalAbstractValue other) {
         if (this.isBottom() || other.isBottom()) return bottom();
-        if (this.isTop() || other.isTop()) return top();
+        if (this.isTop()) return top();
 
-        if (other.lower <= 0 && other.upper >= 0) {
+        if (other.isTop()){
+             int result  = Math.abs(this.lower) > Math.abs(this.upper) ? Math.abs(this.lower) : Math.abs(this.upper);
+             return new IntervalAbstractValue(-result, result);
+        }
+
+        if (isSingletonZero(other)) {
             // Division by zero is possible, return bottom
             return bottom();
         }
@@ -152,6 +156,14 @@ public class IntervalAbstractValue {
         if (this.isTop() || other.isTop()) return top();
 
         return new IntervalAbstractValue(Math.min(this.lower, other.lower), Math.max(this.upper, other.upper));
+    }
+
+    public boolean isSingleton(IntervalAbstractValue interval) {
+        return !interval.isBottom() && !interval.isTop() && interval.lower == interval.upper;
+    }
+
+    public boolean isSingletonZero(IntervalAbstractValue interval) {
+        return isSingleton(interval) && interval.lower == 0;
     }
 
     public boolean isBottom() {
