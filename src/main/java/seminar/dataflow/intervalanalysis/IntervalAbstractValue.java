@@ -97,7 +97,8 @@ public class IntervalAbstractValue {
     public IntervalAbstractValue subtract(IntervalAbstractValue other){
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
-
+        if (this.lower == NEG_INFINITY || other.upper == POS_INFINITY) return new IntervalAbstractValue(NEG_INFINITY, this.upper - other.lower);
+        if (this.upper == POS_INFINITY || other.lower == NEG_INFINITY) return new IntervalAbstractValue(this.lower - other.upper, POS_INFINITY);
         return new IntervalAbstractValue(this.lower - other.upper, this.upper - other.lower);
     }
 
