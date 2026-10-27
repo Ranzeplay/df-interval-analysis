@@ -128,7 +128,8 @@ public class IntervalAbstractValue {
     }
 
     public IntervalAbstractValue join(IntervalAbstractValue other) {
-        if (this.isBottom() || other.isBottom()) return bottom();
+        if (this.isBottom()) return other;
+        if (other.isBottom()) return this;
         if (this.isTop() || other.isTop()) return top();
 
         return new IntervalAbstractValue(Math.min(this.lower, other.lower), Math.max(this.upper, other.upper));

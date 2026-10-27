@@ -49,12 +49,14 @@ public class IntervalAbstractValueVisitorNaive extends IntervalAbstractValueVisi
 
     @Override
     protected void visitParameter(Var parameter) {
-        if(state.getVariables().containsKey(parameter.getName())) {
+        var name = parameter.getName();
+        if(state.getVariables().containsKey(name)) {
             visitLocal(parameter);
+            resolvedValue = state.getIntervalForVariable(name);
         } else {
-            state.setIntervalForVariable(parameter.getName(), IntervalAbstractValue.top());
+            state.setIntervalForVariable(name, IntervalAbstractValue.top());
+            resolvedValue = IntervalAbstractValue.top();
         }
-        resolvedValue = IntervalAbstractValue.top();
     }
 
     @Override
