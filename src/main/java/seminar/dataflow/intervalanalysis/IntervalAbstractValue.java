@@ -120,7 +120,14 @@ public class IntervalAbstractValue {
             return top();
         }
 
-        return mul(new IntervalAbstractValue(1 / other.upper, 1 / other.lower));
+        int[] values = new int[] {
+            this.lower / other.lower,
+            this.lower / other.upper,
+            this.upper / other.lower,
+            this.upper / other.upper
+        };
+        var stream = IntStream.of(values);
+        return new IntervalAbstractValue(stream.min().getAsInt(), stream.max().getAsInt());
     }
 
     public IntervalAbstractValue widenDiv(IntervalAbstractValue other, ArrayList<Integer> breaks) {
