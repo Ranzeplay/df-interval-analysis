@@ -64,12 +64,19 @@ public class IntervalAbstractValue {
         return new IntervalAbstractValue(interval[0], interval[1]);
     }
 
+    private static int cappedAdd(int a, int b) {
+        long res = (long) a + (long) b;
+        if (res > POS_INFINITY) res = POS_INFINITY;
+        else if (res < NEG_INFINITY) res = NEG_INFINITY;
+
+        return (int) res;
+    }
+
     public IntervalAbstractValue add(IntervalAbstractValue other){
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
-        if (this.lower == NEG_INFINITY || other.lower == NEG_INFINITY) return new IntervalAbstractValue(NEG_INFINITY, this.upper + other.upper);
-        if (this.upper == POS_INFINITY || other.upper == POS_INFINITY) return new IntervalAbstractValue(this.lower + other.lower, POS_INFINITY);
-        return new IntervalAbstractValue(this.lower + other.lower, this.upper + other.upper);
+
+        return new IntervalAbstractValue(cappedAdd(this.lower, other.lower), cappedAdd(this.upper, other.upper));
     }
 
     public IntervalAbstractValue widenAdd(IntervalAbstractValue other, ArrayList<Integer> breaks) {
@@ -103,9 +110,6 @@ public class IntervalAbstractValue {
     }
 
     public IntervalAbstractValue div(IntervalAbstractValue other) {
-
-        
-
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
 
@@ -120,14 +124,7 @@ public class IntervalAbstractValue {
             return top();
         }
 
-        int[] values = new int[] {
-            this.lower / other.lower,
-            this.lower / other.upper,
-            this.upper / other.lower,
-            this.upper / other.upper
-        };
-        var stream = IntStream.of(values);
-        return new IntervalAbstractValue(stream.min().getAsInt(), stream.max().getAsInt());
+        return mul(new IntervalAbstractValue(1 / other.upper, 1 / other.lower));
     }
 
     public IntervalAbstractValue widenDiv(IntervalAbstractValue other, ArrayList<Integer> breaks) {
