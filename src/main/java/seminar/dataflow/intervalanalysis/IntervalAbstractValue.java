@@ -83,11 +83,19 @@ public class IntervalAbstractValue {
         return this.add(other).widen(breaks);
     }
 
+    private static int cappedMul(int a, int b) {
+        long res = (long) a * (long) b;
+        if (res > POS_INFINITY) res = POS_INFINITY;
+        else if (res < NEG_INFINITY) res = NEG_INFINITY;
+
+        return (int) res;
+    }
+
     public IntervalAbstractValue mul(IntervalAbstractValue other){
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
 
-        var values = new int[] { this.lower * other.lower, this.lower * other.upper, this.upper * other.lower, this.upper * other.upper };
+        var values = new int[] { cappedMul(this.lower, other.lower), cappedMul(this.lower, other.upper), cappedMul(this.upper, other.lower), cappedMul(this.upper, other.upper) };
         var stream = IntStream.of(values);
 
         return new IntervalAbstractValue(stream.min().getAsInt(), stream.max().getAsInt());
@@ -101,12 +109,19 @@ public class IntervalAbstractValue {
         return this.subtract(other).widen(breaks);
     }
 
+    private static int cappedSubtract(int a, int b) {
+        long res = (long) a - (long) b;
+        if (res > POS_INFINITY) res = POS_INFINITY;
+        else if (res < NEG_INFINITY) res = NEG_INFINITY;
+
+        return (int) res;
+    }
+
     public IntervalAbstractValue subtract(IntervalAbstractValue other){
         if (this.isBottom() || other.isBottom()) return bottom();
         if (this.isTop() || other.isTop()) return top();
-        if (this.lower == NEG_INFINITY || other.upper == POS_INFINITY) return new IntervalAbstractValue(NEG_INFINITY, this.upper - other.lower);
-        if (this.upper == POS_INFINITY || other.lower == NEG_INFINITY) return new IntervalAbstractValue(this.lower - other.upper, POS_INFINITY);
-        return new IntervalAbstractValue(this.lower - other.upper, this.upper - other.lower);
+        
+        return new IntervalAbstractValue(cappedSubtract(this.lower, other.upper), cappedSubtract(this.upper, other.lower));
     }
 
     public IntervalAbstractValue div(IntervalAbstractValue other) {
